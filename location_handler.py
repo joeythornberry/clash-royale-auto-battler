@@ -8,7 +8,7 @@ class LocationHandler:
         #the file that the images are kept in
         self.base_image_url = base_image_url
 
-    def get_location(self,image,region=None,confidence=0.95):
+    def get_location(self,image,region=None,confidence=0.95,grayscale = True):
         """finds the image by either locating it on the screen or by looking up its location if it's been located before. returns None if image is not found in locations or on the screen"""
         if image in self.locations.keys():
             print(image+" already found")
@@ -17,9 +17,9 @@ class LocationHandler:
             print("searching for "+image)
             #we can use the size and location of the screen once we find it to narrow down the source (currently not in use for testing purposes)
             if(region != None):
-                center = pyautogui.locateCenterOnScreen(self.base_image_url+image,grayscale = True,region=region,confidence=confidence)
+                center = pyautogui.locateCenterOnScreen(self.base_image_url+image,grayscale = grayscale,region=region,confidence=confidence)
             else:
-                center = pyautogui.locateCenterOnScreen(self.base_image_url+image,grayscale = True,confidence=confidence)
+                center = pyautogui.locateCenterOnScreen(self.base_image_url+image,grayscale = grayscale,confidence=confidence)
             if center != None:
                 print("found at "+str(center.x)+","+str(center.y))
                 self.locations[image] = center
