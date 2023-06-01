@@ -11,6 +11,7 @@ END_BATTLE = "END_BATTLE"
 
 
 def fight_seasonal_battles(location_handler,api_accesser):
+
     task = CALIBRATE_AND_GET_TO_SEASONAL_SCREEN
 
     while True:
@@ -30,7 +31,7 @@ def fight_seasonal_battles(location_handler,api_accesser):
         
         if(task == SELECT_1V1_BATTLE):
             #battle_1v1_button = location_handler.get_location("battle_1v1_button.png",screen)
-            battle_1v1_button = location_handler.get_location("battle_1v1_button.png")
+            battle_1v1_button = location_handler.get_location("battle_1v1_button.png",confidence = 0.98,grayscale = False)
             if(battle_1v1_button != None):
                 pyautogui.click(battle_1v1_button)
                 print("selected 1v1 battle")
