@@ -78,8 +78,9 @@ def fight_seasonal_battles(location_handler,api_accesser):
             if(last_battle_time != api_accesser.last_battle_time()):
                 print("time of last battle has changed, meaning the current battle has ended")
                 length_of_battle_seconds = round(time.time() - start_of_current_battle_time)
-                have_we_reached_1000_seasonal_tokens = api_accesser.do_last_battle_seasonal_tokens_put_total_over_1000(length_of_battle_seconds)
-                if(have_we_reached_1000_seasonal_tokens):
+                api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
+                maximum_tokens_reached = api_accesser.maximum_tokens_reached()
+                if(maximum_tokens_reached):
                     #we would also stop the program here
                     print("goal reached")
                 else:
