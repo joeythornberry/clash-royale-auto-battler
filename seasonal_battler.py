@@ -1,33 +1,37 @@
 import pyautogui
 import time
 
-
-CALIBRATE_AND_GET_TO_SEASONAL_SCREEN = "CALIBRATE_AND_GET_TO_SEASONAL_SCREEN"
-SELECT_1V1_BATTLE = "SELECT_1V1_BATTLE"
-CONFIRM_1V1_BATTLE = "CONFIRM_1V1_BATTLE"
-CALIBRATE_BATTLE = "CALIBRATE_BATTLE"
-BATTLE = "BATTLE"
-END_BATTLE = "END_BATTLE"
-
-
 def fight_seasonal_battles(location_handler,api_accesser):
+
+    CALIBRATE_AND_GET_TO_SEASONAL_SCREEN = "CALIBRATE_AND_GET_TO_SEASONAL_SCREEN"
+    SELECT_1V1_BATTLE = "SELECT_1V1_BATTLE"
+    CONFIRM_1V1_BATTLE = "CONFIRM_1V1_BATTLE"
+    CALIBRATE_BATTLE = "CALIBRATE_BATTLE"
+    BATTLE = "BATTLE"
+    END_BATTLE = "END_BATTLE"
 
     task = CALIBRATE_AND_GET_TO_SEASONAL_SCREEN
 
+    iterations = 0
+
     while True:
+
+        iterations += 1
+
         if(task == CALIBRATE_AND_GET_TO_SEASONAL_SCREEN):
             #use these two images, one at the top left and one at the bottom right (the seasonal button), to estimate the size of the screen
-            upper_left_crown = location_handler.get_location("upper_left_crown.png")
-            seasonal_button = location_handler.get_location("seasonal_button.png")
-            if(upper_left_crown != None and seasonal_button != None):
-                screen_width = seasonal_button.x-upper_left_crown.x
-                screen_height = seasonal_button.y-upper_left_crown.y
-                screen = (upper_left_crown.x,upper_left_crown.y,screen_width,screen_height)
-                print("screen size (very roughly) calculated: "+str(screen))
-                #click on the seasonal button
-                pyautogui.click(seasonal_button)
-                print("opened seasonal screen")
-                task = SELECT_1V1_BATTLE
+            if iterations % 5000 == 0:
+                upper_left_crown = location_handler.get_location("upper_left_crown.png")
+                seasonal_button = location_handler.get_location("seasonal_button.png")
+                if(upper_left_crown != None and seasonal_button != None):
+                    screen_width = seasonal_button.x-upper_left_crown.x
+                    screen_height = seasonal_button.y-upper_left_crown.y
+                    screen = (upper_left_crown.x,upper_left_crown.y,screen_width,screen_height)
+                    print("screen size (very roughly) calculated: "+str(screen))
+                    #click on the seasonal button
+                    pyautogui.click(seasonal_button)
+                    print("opened seasonal screen")
+                    task = SELECT_1V1_BATTLE
         
         if(task == SELECT_1V1_BATTLE):
             #battle_1v1_button = location_handler.get_location("battle_1v1_button.png",screen)
@@ -74,18 +78,19 @@ def fight_seasonal_battles(location_handler,api_accesser):
             for slot in card_slots:
                 pyautogui.moveTo(slot[0],slot[1])
                 pyautogui.dragTo(target_pointX,target_pointY,0.5)
-            #detect if the battle has ended by checking if the time of the last battle is different
-            if(last_battle_time != api_accesser.last_battle_time()):
-                print("time of last battle has changed, meaning the current battle has ended")
-                length_of_battle_seconds = round(time.time() - start_of_current_battle_time)
-                api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
-                maximum_tokens_reached = api_accesser.maximum_tokens_reached()
-                if(maximum_tokens_reached):
-                    #we would also stop the program here
-                    print("goal reached")
-                else:
-                    print("goal not yet reached")
-                task = END_BATTLE
+            if iterations % 10 == 0:
+                #detect if the battle has ended by checking if the time of the last battle is different
+                if(last_battle_time != api_accesser.last_battle_time()):
+                    print("time of last battle has changed, meaning the current battle has ended")
+                    length_of_battle_seconds = round(time.time() - start_of_current_battle_time)
+                    api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
+                    maximum_tokens_reached = api_accesser.maximum_tokens_reached()
+                    if(maximum_tokens_reached):
+                        #we would also stop the program here
+                        print("goal reached")
+                    else:
+                        print("goal not yet reached")
+                    task = END_BATTLE
                 
         if(task == END_BATTLE):
             #end_of_battle_ok = location_handler.get_location("end_of_battle_ok.png",region=screen)
