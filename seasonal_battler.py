@@ -50,6 +50,7 @@ def fight_seasonal_battles(location_handler,api_accesser):
             #enemy_tower_healthbar = location_handler.get_location("enemy_tower_healthbar.png",region=screen,confidence=0.8)
             enemy_tower_healthbar = location_handler.get_location("enemy_tower_healthbar.png",confidence=0.8)
             if(enemy_tower_healthbar != None):
+                #wait for cards to show up (they don't until a little after enemy tower is visible)
                 time.sleep(1)
                 #calculate a target point just in front of the left tower, so that spells will hit it
                 target_pointX = enemy_tower_healthbar.x
