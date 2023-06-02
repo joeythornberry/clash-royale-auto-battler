@@ -26,13 +26,15 @@ class EmulatorHandler:
                     break
 
     #https://stackoverflow.com/questions/59868194/rename-a-window/66141368#66141368
-    def windows_to_destroy(self,handle, more):
+
+    def __windows_to_close(self,handle, more):
+        """private function that will be called on all open windows, and will tell ones related to the emulator to close"""
         title = win32gui.GetWindowText(handle)
-        if title.startswith("Nox") or title.startswith("Clash Royale") or title.startswith("Multiplayer Manager"):
-            #handle = win32gui.FindWindow(None,title)
+        if title.startswith("Nox") or title.startswith("Clash Royale"):
             win32gui.PostMessage(handle,win32con.WM_CLOSE,0,0)
             print("closing: "+title)
 
     def close_emulator(self):
+        """calls the __windows_to_close function on all open windows, selectively closing the ones we need to close"""
         print("closing emulator")
-        win32gui.EnumWindows(self.windows_to_destroy, None)
+        win32gui.EnumWindows(self.__windows_to_close, None)
