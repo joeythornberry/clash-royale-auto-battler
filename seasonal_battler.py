@@ -39,6 +39,7 @@ def fight_seasonal_battles(location_handler,emulator_handler,api_accesser):
             if(battle_1v1_button != None):
                 pyautogui.click(battle_1v1_button)
                 print("selected 1v1 battle")
+                print("sleeping to give confirm button time to show up")
                 time.sleep(1)
                 task = CONFIRM_1V1_BATTLE
 
@@ -55,6 +56,7 @@ def fight_seasonal_battles(location_handler,emulator_handler,api_accesser):
             enemy_tower_healthbar = location_handler.get_location("enemy_tower_healthbar.png",confidence=0.8)
             if(enemy_tower_healthbar != None):
                 #wait for cards to show up (they don't until a little after enemy tower is visible)
+                print("sleeping to wait for cards to show up on screen")
                 time.sleep(1.5)
                 #calculate a target point just in front of the left tower, so that spells will hit it
                 target_pointX = enemy_tower_healthbar.x
@@ -99,6 +101,6 @@ def fight_seasonal_battles(location_handler,emulator_handler,api_accesser):
             if(end_of_battle_ok != None):
                 pyautogui.click(end_of_battle_ok)
                 print("battle ended")
-                #sleep so you don't start clicking until the loading screen is done
+                print("sleeping to wait for loading to finish")
                 time.sleep(15)
                 task = SELECT_1V1_BATTLE
