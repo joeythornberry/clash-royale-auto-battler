@@ -1,7 +1,7 @@
 import pyautogui
 import time
 
-def fight_seasonal_battles(location_handler,api_accesser):
+def fight_seasonal_battles(location_handler,emulator_handler,api_accesser):
 
     CALIBRATE_AND_GET_TO_SEASONAL_SCREEN = "CALIBRATE_AND_GET_TO_SEASONAL_SCREEN"
     SELECT_1V1_BATTLE = "SELECT_1V1_BATTLE"
@@ -86,8 +86,9 @@ def fight_seasonal_battles(location_handler,api_accesser):
                     api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
                     maximum_tokens_reached = api_accesser.maximum_tokens_reached()
                     if(maximum_tokens_reached):
-                        #we would also stop the program here
                         print("goal reached")
+                        emulator_handler.close_emulator()
+                        break
                     else:
                         print("goal not yet reached")
                     task = END_BATTLE

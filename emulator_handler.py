@@ -1,4 +1,6 @@
 import pyautogui
+import win32con
+import win32gui
 
 class EmulatorHandler:
 
@@ -22,3 +24,15 @@ class EmulatorHandler:
                     pyautogui.click(clash_royale_button)
                     print("clash royale opened")
                     break
+
+    #https://stackoverflow.com/questions/59868194/rename-a-window/66141368#66141368
+    def windows_to_destroy(self,handle, more):
+        title = win32gui.GetWindowText(handle)
+        if title.startswith("Nox") or title.startswith("Clash Royale") or title.startswith("Multiplayer Manager"):
+            #handle = win32gui.FindWindow(None,title)
+            win32gui.PostMessage(handle,win32con.WM_CLOSE,0,0)
+            print("closing: "+title)
+
+    def close_emulator(self):
+        print("closing emulator")
+        win32gui.EnumWindows(self.windows_to_destroy, None)
