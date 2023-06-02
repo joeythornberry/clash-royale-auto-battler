@@ -35,4 +35,5 @@ class ApiAccesser:
         self.total_tokens_gained += tokens_gained
 
     def maximum_tokens_reached(self):
+        print(self.total_tokens_gained+" out of "+MAX_TOKENS+" tokens gained")
         return self.total_tokens_gained >= MAX_TOKENS
