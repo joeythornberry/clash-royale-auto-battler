@@ -94,5 +94,5 @@ def fight_seasonal_battles(location_handler,api_accesser):
                 pyautogui.click(end_of_battle_ok)
                 print("battle ended")
                 #sleep so you don't start clicking until the loading screen is done
-                time.sleep(5)
+                time.sleep(15)
                 task = SELECT_1V1_BATTLE
