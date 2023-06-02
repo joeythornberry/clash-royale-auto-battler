@@ -30,9 +30,9 @@ class ApiAccesser:
         tokens_for_destroying_towers = r_decoded[0]["team"][0]["crowns"]*TOKENS_FOR_DESTROYING_TOWER
         tokens_for_remaining_towers = (NUMBER_OF_TOWERS-r_decoded[0]["opponent"][0]["crowns"])*TOKENS_FOR_REMAINING_TOWER
         tokens_for_spending_elixir = time_of_battle*ELIXIR_SPENT_EVERY_SECOND*TOKENS_FOR_SPENDING_ELIXIR
-        tokens_gained = (tokens_for_destroying_towers+tokens_for_remaining_towers+tokens_for_spending_elixir)*UNDERESTIMATE_FOR_SAFETY
+        tokens_gained = round((tokens_for_destroying_towers+tokens_for_remaining_towers+tokens_for_spending_elixir)*UNDERESTIMATE_FOR_SAFETY)
         print("estimated "+str(tokens_gained)+" tokens gained")
-        self.total_tokens_gained += round(tokens_gained)
+        self.total_tokens_gained += tokens_gained
 
     def maximum_tokens_reached(self):
         return self.total_tokens_gained >= MAX_TOKENS
