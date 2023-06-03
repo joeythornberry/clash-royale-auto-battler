@@ -1,6 +1,7 @@
 import pyautogui
 import win32con
 import win32gui
+import time
 
 class EmulatorHandler:
 
@@ -19,6 +20,8 @@ class EmulatorHandler:
                     print("nox assistant opened")
 
             if(open_emulator_task == self.OPEN_CLASH_ROYALE):
+                print("sleeping so we don't make more locate calls than we need to")
+                time.sleep(3)
                 clash_royale_button = location_handler.get_location("nox_clash_royale.png")
                 if(clash_royale_button != None):
                     pyautogui.click(clash_royale_button)
@@ -26,7 +29,6 @@ class EmulatorHandler:
                     break
 
     #https://stackoverflow.com/questions/59868194/rename-a-window/66141368#66141368
-
     def __windows_to_close(self,handle, more):
         """private function that will be called on all open windows, and will tell ones related to the emulator to close"""
         title = win32gui.GetWindowText(handle)

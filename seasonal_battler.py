@@ -16,6 +16,8 @@ def fight_seasonal_battles(location_handler,api_accesser):
 
     while True:
         if(task == CALIBRATE_AND_GET_TO_SEASONAL_SCREEN):
+            print("sleeping so we don't make more locate calls than we need to")
+            time.sleep(5)
             #use these two images, one at the top left and one at the bottom right (the seasonal button), to estimate the size of the screen
             upper_left_crown = location_handler.get_location("upper_left_crown.png")
             seasonal_button = location_handler.get_location("seasonal_button.png")
@@ -48,6 +50,8 @@ def fight_seasonal_battles(location_handler,api_accesser):
                 task = CALIBRATE_BATTLE
 
         if(task == CALIBRATE_BATTLE):
+            print("sleeping so we don't make more locate calls than we need to")
+            time.sleep(2)
             #enemy_tower_healthbar = location_handler.get_location("enemy_tower_healthbar.png",region=screen,confidence=0.8)
             enemy_tower_healthbar = location_handler.get_location("enemy_tower_healthbar.png",confidence=0.8)
             if(enemy_tower_healthbar != None):
