@@ -15,6 +15,7 @@ def fight_seasonal_battles(location_handler,api_accesser):
     task = CALIBRATE_AND_GET_TO_SEASONAL_SCREEN
 
     while True:
+
         if(task == CALIBRATE_AND_GET_TO_SEASONAL_SCREEN):
             print("sleeping so we don't make more locate calls than we need to")
             time.sleep(5)
@@ -73,6 +74,7 @@ def fight_seasonal_battles(location_handler,api_accesser):
                 last_battle_time = api_accesser.last_battle_time()
                 #we'll use this to find how long the battle took
                 start_of_current_battle_time = time.time()
+                battle_iterations = 0
                 task = BATTLE
 
         if(task == BATTLE):    
@@ -80,18 +82,21 @@ def fight_seasonal_battles(location_handler,api_accesser):
             for slot in card_slots:
                 pyautogui.moveTo(slot[0],slot[1])
                 pyautogui.dragTo(target_pointX,target_pointY,0.5)
-            #detect if the battle has ended by checking if the time of the last battle is different
-            if(last_battle_time != api_accesser.last_battle_time()):
-                print("time of last battle has changed, meaning the current battle has ended")
-                length_of_battle_seconds = round(time.time() - start_of_current_battle_time)
-                api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
-                maximum_tokens_reached = api_accesser.maximum_tokens_reached()
-                if(maximum_tokens_reached):
-                    #we would also stop the program here
-                    print("goal reached")
-                else:
-                    print("goal not yet reached")
-                task = END_BATTLE
+            battle_iterations += 1
+            #only do this every 10 cycles because it takes a while
+            if battle_iterations % 5 == 0:
+                #detect if the battle has ended by checking if the time of the last battle is different
+                if(last_battle_time != api_accesser.last_battle_time()):
+                    print("time of last battle has changed, meaning the current battle has ended")
+                    length_of_battle_seconds = round(time.time() - start_of_current_battle_time)
+                    api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
+                    maximum_tokens_reached = api_accesser.maximum_tokens_reached()
+                    if(maximum_tokens_reached):
+                        #we would also stop the program here
+                        print("goal reached")
+                    else:
+                        print("goal not yet reached")
+                    task = END_BATTLE
                 
         if(task == END_BATTLE):
             #end_of_battle_ok = location_handler.get_location("end_of_battle_ok.png",region=screen)
