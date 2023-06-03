@@ -9,12 +9,34 @@ CALIBRATE_BATTLE = "CALIBRATE_BATTLE"
 BATTLE = "BATTLE"
 END_BATTLE = "END_BATTLE"
 
+TOLERATED_STARTUP_TIME = 180
+TOLERATED_TIME_BETWEEN_BATTLES = 420
+TOLERATED_TOTAL_RUN_TIME = 1800
+
+STARTUP_PHASE = "STARTUP_PHASE"
+BATTLE_PHASE = "BATTLE_PHASE"
+
 
 def fight_seasonal_battles(location_handler,api_accesser):
 
     task = CALIBRATE_AND_GET_TO_SEASONAL_SCREEN
+    phase = STARTUP_PHASE
+
+    start_time = time.time()
+    time_of_last_successful_action = time.time()
 
     while True:
+
+        time_since_last_successful_action = time.time() - time_of_last_successful_action
+        if phase == STARTUP_PHASE and time_since_last_successful_action >= TOLERATED_STARTUP_TIME:
+            print("startup took too long")
+            return False
+        elif phase == BATTLE_PHASE and time_since_last_successful_action >= TOLERATED_TIME_BETWEEN_BATTLES:
+            print("starting next battle took too long")
+            return False
+        if time.time() - start_time >= TOLERATED_TOTAL_RUN_TIME:
+            print("run took too long")
+            return False
 
         if(task == CALIBRATE_AND_GET_TO_SEASONAL_SCREEN):
             print("sleeping so we don't make more locate calls than we need to")
@@ -48,6 +70,8 @@ def fight_seasonal_battles(location_handler,api_accesser):
             if(confirm_1v1_button != None):
                 pyautogui.click(confirm_1v1_button)
                 print("confirmed 1v1 battle")
+                phase = BATTLE_PHASE
+                time_of_last_successful_action = time.time()
                 task = CALIBRATE_BATTLE
 
         if(task == CALIBRATE_BATTLE):
@@ -91,9 +115,10 @@ def fight_seasonal_battles(location_handler,api_accesser):
                     length_of_battle_seconds = round(time.time() - start_of_current_battle_time)
                     api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
                     maximum_tokens_reached = api_accesser.maximum_tokens_reached()
+                    time_of_last_successful_action = time.time()
                     if(maximum_tokens_reached):
-                        #we would also stop the program here
                         print("goal reached")
+                        return True
                     else:
                         print("goal not yet reached")
                     task = END_BATTLE

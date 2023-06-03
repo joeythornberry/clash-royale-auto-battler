@@ -10,6 +10,7 @@ class EmulatorHandler:
         self.OPEN_CLASH_ROYALE = "OPEN_CLASH_ROYALE"
 
     def open_emulator(self,location_handler):
+        print("opening emulator")
         open_emulator_task = self.OPEN_NOX
         while True:
             if(open_emulator_task == self.OPEN_NOX):
