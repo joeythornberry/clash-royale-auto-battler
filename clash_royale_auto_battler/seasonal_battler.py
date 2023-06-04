@@ -96,7 +96,9 @@ def fight_seasonal_battles(location_handler,api_accesser):
                     card_slots.extend(location_handler.get_multiple_locations(card_elixir_icon))
 
                 #when this changes, we'll know the battle has been ended
-                last_battle_time = api_accesser.last_battle_time()
+                old_last_battle_time = api_accesser.last_battle_time()
+                if new_last_battle_time == exit_codes.FATAL_ERROR:
+                    return exit_codes.FATAL_ERROR
                 #we'll use this to find how long the battle took
                 start_of_current_battle_time = current_time
                 battle_iterations = 0
@@ -111,17 +113,25 @@ def fight_seasonal_battles(location_handler,api_accesser):
             #only do this every 5 cycles because it takes a while
             if battle_iterations % 5 == 0:
                 #detect if the battle has ended by checking if the time of the last battle is different
-                if(last_battle_time != api_accesser.last_battle_time()):
+                new_last_battle_time = api_accesser.last_battle_time()
+                if new_last_battle_time == exit_codes.FATAL_ERROR:
+                    return exit_codes.FATAL_ERROR
+                if(old_last_battle_time != new_last_battle_time):
                     print("time of last battle has changed, meaning the current battle has ended")
+
+                    print("adding tokens gained to total token count")
                     length_of_battle_seconds = round(current_time - start_of_current_battle_time)
-                    api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
+                    add_tokens_to_total = api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
+                    if(add_tokens_to_total == exit_codes.FATAL_ERROR):
+                        return exit_codes.FATAL_ERROR
+                    
                     maximum_tokens_reached = api_accesser.maximum_tokens_reached()
-                    time_of_last_successful_action = current_time
                     if(maximum_tokens_reached):
                         print("goal reached")
                         return exit_codes.SUCCESS
                     else:
                         print("goal not yet reached")
+                    time_of_last_successful_action = current_time
                     task = END_BATTLE
                 
         if(task == END_BATTLE):
