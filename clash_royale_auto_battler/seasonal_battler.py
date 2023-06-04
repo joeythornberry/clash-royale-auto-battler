@@ -97,7 +97,7 @@ def fight_seasonal_battles(location_handler,api_accesser):
 
                 #when this changes, we'll know the battle has been ended
                 old_last_battle_time = api_accesser.last_battle_time()
-                if new_last_battle_time == exit_codes.FATAL_ERROR:
+                if old_last_battle_time == exit_codes.FATAL_ERROR:
                     return exit_codes.FATAL_ERROR
                 #we'll use this to find how long the battle took
                 start_of_current_battle_time = current_time
