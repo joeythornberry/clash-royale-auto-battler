@@ -27,15 +27,15 @@ def fight_seasonal_battles(location_handler,api_accesser):
     time_of_last_successful_action = time.time()
 
     while True:
-
-        time_since_last_successful_action = time.time() - time_of_last_successful_action
+        current_time = time.time()
+        time_since_last_successful_action = current_time - time_of_last_successful_action
         if phase == STARTUP_PHASE and time_since_last_successful_action >= TOLERATED_STARTUP_TIME:
             print("startup took too long")
             return exit_codes.RELOADABLE_ERROR
         elif phase == BATTLE_PHASE and time_since_last_successful_action >= TOLERATED_TIME_BETWEEN_BATTLES:
             print("starting next battle took too long")
             return exit_codes.RELOADABLE_ERROR
-        if time.time() - start_time >= TOLERATED_TOTAL_RUN_TIME:
+        if current_time - start_time >= TOLERATED_TOTAL_RUN_TIME:
             print("run took too long")
             return exit_codes.RELOADABLE_ERROR
 
@@ -72,7 +72,7 @@ def fight_seasonal_battles(location_handler,api_accesser):
                 pyautogui.click(confirm_1v1_button)
                 print("confirmed 1v1 battle")
                 phase = BATTLE_PHASE
-                time_of_last_successful_action = time.time()
+                time_of_last_successful_action = current_time
                 task = CALIBRATE_BATTLE
 
         if(task == CALIBRATE_BATTLE):
@@ -98,7 +98,7 @@ def fight_seasonal_battles(location_handler,api_accesser):
                 #when this changes, we'll know the battle has been ended
                 last_battle_time = api_accesser.last_battle_time()
                 #we'll use this to find how long the battle took
-                start_of_current_battle_time = time.time()
+                start_of_current_battle_time = current_time
                 battle_iterations = 0
                 task = BATTLE
 
@@ -113,10 +113,10 @@ def fight_seasonal_battles(location_handler,api_accesser):
                 #detect if the battle has ended by checking if the time of the last battle is different
                 if(last_battle_time != api_accesser.last_battle_time()):
                     print("time of last battle has changed, meaning the current battle has ended")
-                    length_of_battle_seconds = round(time.time() - start_of_current_battle_time)
+                    length_of_battle_seconds = round(current_time - start_of_current_battle_time)
                     api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
                     maximum_tokens_reached = api_accesser.maximum_tokens_reached()
-                    time_of_last_successful_action = time.time()
+                    time_of_last_successful_action = current_time
                     if(maximum_tokens_reached):
                         print("goal reached")
                         return exit_codes.SUCCESS
