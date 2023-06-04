@@ -6,7 +6,7 @@ import api_accesser
 import time
 import exit_codes
 
-#make a folder called private.py (it's ignored by git) and make these variables
+#make a file called private.py (it's ignored by git) and make these variables
 #the full url of the clash-royale-auto-battler/images folder on your computer
 BASE_IMAGE_URL = private.base_image_url
 #go to developer.clashroyale.com and make a developer key (you can use https://whatismyipaddress.com/ to find your public IP address)
