@@ -1,5 +1,6 @@
 import pyautogui
 import time
+import exit_codes
 
 
 CALIBRATE_AND_GET_TO_SEASONAL_SCREEN = "CALIBRATE_AND_GET_TO_SEASONAL_SCREEN"
@@ -30,13 +31,13 @@ def fight_seasonal_battles(location_handler,api_accesser):
         time_since_last_successful_action = time.time() - time_of_last_successful_action
         if phase == STARTUP_PHASE and time_since_last_successful_action >= TOLERATED_STARTUP_TIME:
             print("startup took too long")
-            return False
+            return exit_codes.RELOADABLE_ERROR
         elif phase == BATTLE_PHASE and time_since_last_successful_action >= TOLERATED_TIME_BETWEEN_BATTLES:
             print("starting next battle took too long")
-            return False
+            return exit_codes.RELOADABLE_ERROR
         if time.time() - start_time >= TOLERATED_TOTAL_RUN_TIME:
             print("run took too long")
-            return False
+            return exit_codes.RELOADABLE_ERROR
 
         if(task == CALIBRATE_AND_GET_TO_SEASONAL_SCREEN):
             print("sleeping so we don't make more locate calls than we need to")
@@ -118,7 +119,7 @@ def fight_seasonal_battles(location_handler,api_accesser):
                     time_of_last_successful_action = time.time()
                     if(maximum_tokens_reached):
                         print("goal reached")
-                        return True
+                        return exit_codes.SUCCESS
                     else:
                         print("goal not yet reached")
                     task = END_BATTLE
