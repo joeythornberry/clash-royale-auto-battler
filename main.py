@@ -21,6 +21,12 @@ api_accesser = api_accesser.ApiAccesser(DEVELOPER_KEY,PLAYER_ID_AFTER_HASHTAG)
 
 
 while True:
+    api_access,api_access_failure_information = api_accesser.verify_api_is_working()
+    if api_access != exit_codes.SUCCESS:
+        print("FATAL ERROR: failure to access API")
+        print("error information: "+str(api_access_failure_information))
+        break
+    
     emulator_handler.open_emulator(location_handler)
     fight_seasonal_battles_result = seasonal_battler.fight_seasonal_battles(location_handler,api_accesser)
     if fight_seasonal_battles_result == exit_codes.SUCCESS:

@@ -1,5 +1,6 @@
 import requests
 import json
+import exit_codes
 
 NUMBER_OF_TOWERS = 3
 TOKENS_FOR_DESTROYING_TOWER = 100
@@ -15,6 +16,21 @@ class ApiAccesser:
         self.total_tokens_gained = 0
         self.developer_key = developer_key
         self.player_id_after_hashtag = player_id_after_hashtag
+
+    def verify_api_is_working(self):
+        print("testing API access")
+        r=requests.get("https://api.clashroyale.com/v1/players/%23"+self.player_id_after_hashtag+"/battlelog", headers={"Accept":"application/json", "authorization": "Bearer "+self.developer_key})
+        r_string = json.dumps(r.json())
+        r_decoded = json.loads(r_string)
+        try:
+            last_battle = r_decoded[0]
+            print("API access functional")
+            return exit_codes.SUCCESS,None
+        except:
+            print("API access not functional")
+            return exit_codes.FATAL_ERROR,r_decoded
+
+
 
     def last_battle_time(self):
         r=requests.get("https://api.clashroyale.com/v1/players/%23"+self.player_id_after_hashtag+"/battlelog", headers={"Accept":"application/json", "authorization": "Bearer "+self.developer_key})
