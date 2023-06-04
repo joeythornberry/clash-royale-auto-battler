@@ -107,7 +107,7 @@ def fight_seasonal_battles(location_handler,api_accesser):
                 pyautogui.moveTo(slot[0],slot[1])
                 pyautogui.dragTo(target_pointX,target_pointY,0.5)
             battle_iterations += 1
-            #only do this every 10 cycles because it takes a while
+            #only do this every 5 cycles because it takes a while
             if battle_iterations % 5 == 0:
                 #detect if the battle has ended by checking if the time of the last battle is different
                 if(last_battle_time != api_accesser.last_battle_time()):
