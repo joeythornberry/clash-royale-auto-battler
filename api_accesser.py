@@ -28,7 +28,14 @@ class ApiAccesser:
             return exit_codes.SUCCESS,None
         except:
             print("API access not functional")
-            return exit_codes.FATAL_ERROR,r_decoded
+            try:
+                if "reason" in r_decoded.keys():
+                    print("your developer key is likely invalid")
+            except:
+                print("your player id is likely invalid")
+            finally:
+                print('did you create a file called "private.py" and enter the necessary information? (see README)')
+                return exit_codes.FATAL_ERROR,r_decoded
 
 
 
