@@ -18,6 +18,7 @@ PLAYER_ID_AFTER_HASHTAG = private.player_id_after_hashtag
 location_handler = location_handler.LocationHandler(BASE_IMAGE_URL)
 emulator_handler = emulator_handler.EmulatorHandler()
 api_accesser = api_accesser.ApiAccesser(DEVELOPER_KEY,PLAYER_ID_AFTER_HASHTAG)
+seasonal_battler = seasonal_battler.SeasonalBattler()
 
 
 while True:
