@@ -17,7 +17,9 @@ TOLERATED_TOTAL_RUN_TIME = 1800
 STARTUP_PHASE = "STARTUP_PHASE"
 BATTLE_PHASE = "BATTLE_PHASE"
 
-def SeasonalBattler():
+MAX_TOKENS = 10
+
+class SeasonalBattler():
     def __init__(self):
         self.total_tokens_gained = 0
 
