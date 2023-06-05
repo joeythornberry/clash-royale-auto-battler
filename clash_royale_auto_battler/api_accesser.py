@@ -8,12 +8,10 @@ TOKENS_FOR_REMAINING_TOWER = 50
 ELIXIR_SPENT_EVERY_SECOND = 0.357
 TOKENS_FOR_SPENDING_ELIXIR = 1
 UNDERESTIMATE_FOR_SAFETY = 0.95
-MAX_TOKENS = 1000
 
 class ApiAccesser:
 
     def __init__(self,developer_key,player_id_after_hashtag):
-        self.total_tokens_gained = 0
         self.developer_key = developer_key
         self.player_id_after_hashtag = player_id_after_hashtag
 
@@ -50,7 +48,7 @@ class ApiAccesser:
             print("failed to access API")
             return exit_codes.FATAL_ERROR
 
-    def add_last_battle_season_tokens_to_total(self,time_of_battle):
+    def report_battle_and_return_tokens_gained(self,time_of_battle):
         r=requests.get("https://api.clashroyale.com/v1/players/%23"+self.player_id_after_hashtag+"/battlelog", headers={"Accept":"application/json", "authorization": "Bearer "+self.developer_key})
         r_string = json.dumps(r.json())
         r_decoded = json.loads(r_string)
@@ -60,10 +58,6 @@ class ApiAccesser:
             tokens_for_spending_elixir = time_of_battle*ELIXIR_SPENT_EVERY_SECOND*TOKENS_FOR_SPENDING_ELIXIR
             tokens_gained = round((tokens_for_destroying_towers+tokens_for_remaining_towers+tokens_for_spending_elixir)*UNDERESTIMATE_FOR_SAFETY)
             print("estimated "+str(tokens_gained)+" tokens gained")
-            self.total_tokens_gained += tokens_gained
+            return tokens_gained
         except:
             return exit_codes.FATAL_ERROR
-
-    def maximum_tokens_reached(self):
-        print(str(self.total_tokens_gained)+" out of "+str(MAX_TOKENS)+" tokens gained")
-        return self.total_tokens_gained >= MAX_TOKENS

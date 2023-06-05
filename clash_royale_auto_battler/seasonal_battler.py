@@ -126,12 +126,9 @@ class SeasonalBattler():
 
                         print("adding tokens gained to total token count")
                         length_of_battle_seconds = round(current_time - start_of_current_battle_time)
-                        add_tokens_to_total = api_accesser.add_last_battle_season_tokens_to_total(length_of_battle_seconds)
-                        if(add_tokens_to_total == exit_codes.FATAL_ERROR):
-                            return exit_codes.FATAL_ERROR
-                        
-                        maximum_tokens_reached = api_accesser.maximum_tokens_reached()
-                        if(maximum_tokens_reached):
+                        self.total_tokens_gained += api_accesser.report_battle_and_return_tokens_gained(length_of_battle_seconds)
+                        print(str(self.total_tokens_gained)+" out of "+str(MAX_TOKENS)+" tokens gained")
+                        if(self.total_tokens_gained >= MAX_TOKENS):
                             print("goal reached")
                             return exit_codes.SUCCESS
                         else:
