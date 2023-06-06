@@ -11,7 +11,7 @@ class ReportHandler:
         self.battles = []
 
     def log_battle(self,battle_time_seconds,crowns,opponent_crowns,tokens_gained):
-        battle_time_minutes = round(battle_time_seconds)/SECONDS_IN_A_MINUTE
+        battle_time_minutes = round((battle_time_seconds/SECONDS_IN_A_MINUTE),1)
         self.battles.append({
             "battle_time_minutes" : battle_time_minutes,
             "crowns" : crowns,
@@ -21,7 +21,7 @@ class ReportHandler:
 
     def complete_report(self):
         self.end_time = round(time.time())
-        self.total_runtime_minutes = (self.end_time - self.start_time)/SECONDS_IN_A_MINUTE
+        self.total_runtime_minutes = round(((self.end_time - self.start_time)/SECONDS_IN_A_MINUTE),1)
 
     def report(self):
         if self.end_time == None:
