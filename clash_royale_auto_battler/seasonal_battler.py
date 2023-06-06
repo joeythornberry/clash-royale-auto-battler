@@ -23,7 +23,7 @@ class SeasonalBattler():
     def __init__(self):
         self.total_tokens_gained = 0
 
-    def fight_seasonal_battles(self,location_handler,api_accesser):
+    def fight_seasonal_battles(self,location_handler,api_accesser,report_handler):
 
         task = CALIBRATE_AND_GET_TO_SEASONAL_SCREEN
         phase = STARTUP_PHASE
@@ -126,7 +126,7 @@ class SeasonalBattler():
 
                         print("adding tokens gained to total token count")
                         length_of_battle_seconds = round(current_time - start_of_current_battle_time)
-                        self.total_tokens_gained += api_accesser.report_battle_and_return_tokens_gained(length_of_battle_seconds)
+                        self.total_tokens_gained += api_accesser.report_battle_and_return_tokens_gained(length_of_battle_seconds,report_handler)
                         print(str(self.total_tokens_gained)+" out of "+str(MAX_TOKENS)+" tokens gained")
                         if(self.total_tokens_gained >= MAX_TOKENS):
                             print("goal reached")

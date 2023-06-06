@@ -2,6 +2,7 @@ import private
 import emulator_handler
 import seasonal_battler
 import location_handler
+import report_handler
 import api_accesser
 import time
 import exit_codes
@@ -18,6 +19,7 @@ PLAYER_ID_AFTER_HASHTAG = private.player_id_after_hashtag
 location_handler = location_handler.LocationHandler(BASE_IMAGE_URL)
 emulator_handler = emulator_handler.EmulatorHandler()
 api_accesser = api_accesser.ApiAccesser(DEVELOPER_KEY,PLAYER_ID_AFTER_HASHTAG)
+report_handler = report_handler.ReportHandler()
 seasonal_battler = seasonal_battler.SeasonalBattler()
 
 
@@ -29,10 +31,10 @@ while True:
         break
     
     emulator_handler.open_emulator(location_handler)
-    fight_seasonal_battles_result = seasonal_battler.fight_seasonal_battles(location_handler,api_accesser)
+    fight_seasonal_battles_result = seasonal_battler.fight_seasonal_battles(location_handler,api_accesser,report_handler)
     if fight_seasonal_battles_result == exit_codes.SUCCESS:
         print("success")
-        emulator_handler.close_emulator()
+        #emulator_handler.close_emulator()
         break
     elif fight_seasonal_battles_result == exit_codes.FATAL_ERROR:
         print("fatal error")
@@ -43,3 +45,6 @@ while True:
         emulator_handler.close_emulator()
         print("sleeping to make sure emulator has enough time to close")
         time.sleep(10)
+
+report_handler.complete_report()
+report_handler.report()
