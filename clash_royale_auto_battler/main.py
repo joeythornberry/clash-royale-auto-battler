@@ -43,6 +43,7 @@ while True:
     elif fight_seasonal_battles_result == exit_codes.RELOADABLE_ERROR:
         location_handler.reset()
         emulator_handler.close_emulator()
+        report_handler.log_error(exit_codes.RELOADABLE_ERROR)
         print("sleeping to make sure emulator has enough time to close")
         time.sleep(10)
 

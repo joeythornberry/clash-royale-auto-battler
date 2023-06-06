@@ -1,4 +1,5 @@
 import time
+import exit_codes
 
 SECONDS_IN_A_MINUTE = 60
 
@@ -10,6 +11,7 @@ class ReportHandler:
             "end_time" : None,
             "total_runtime_minutes" : None,
             "battles" : [],
+            "errors" : [],
         }
 
     def log_battle(self,battle_time_seconds,crowns,opponent_crowns,tokens_gained):
@@ -20,6 +22,12 @@ class ReportHandler:
             "crowns" : crowns,
             "opponent_crowns" : opponent_crowns,
             "tokens_gained" : tokens_gained
+        })
+
+    def log_error(self,error_type):
+        self.report["errors"].append({
+            "time" : time.asctime(),
+            "error_type" : error_type
         })
 
     def complete_report(self):
