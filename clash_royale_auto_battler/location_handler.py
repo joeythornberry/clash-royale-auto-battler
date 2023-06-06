@@ -57,6 +57,10 @@ class LocationHandler:
             print("found "+str(len(centers))+" instances of "+image)
             return self.locations[image]
     
+    def forget_location(self,image):
+        print("forgetting about "+image)
+        self.locations.pop(image,None)
+
     def reset(self):
         print("forgetting all button locations in case they were incorrect")
         self.locations = {}
