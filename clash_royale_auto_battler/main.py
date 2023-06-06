@@ -47,4 +47,4 @@ while True:
         time.sleep(10)
 
 report_handler.complete_report()
-report_handler.report()
+report_handler.deliver_report()
