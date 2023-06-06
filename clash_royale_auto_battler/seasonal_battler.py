@@ -23,6 +23,15 @@ class SeasonalBattler():
     def __init__(self):
         self.total_tokens_gained = 0
 
+    def check_for_x_button(self,location_handler):
+        x_button = location_handler.get_location("x_button.png",grayscale = False, confidence = 0.9)
+        print("(in case special offer or something is on the screen)")
+        if x_button != None:
+            print("clicking x button to get rid of window on screen")
+            pyautogui.click(x_button)
+            location_handler.forget_location("x_button.png")
+            del x_button
+
     def fight_seasonal_battles(self,location_handler,api_accesser,report_handler):
 
         task = CALIBRATE_AND_GET_TO_SEASONAL_SCREEN
@@ -47,6 +56,7 @@ class SeasonalBattler():
             if(task == CALIBRATE_AND_GET_TO_SEASONAL_SCREEN):
                 print("sleeping so we don't make more locate calls than we need to")
                 time.sleep(5)
+                self.check_for_x_button(location_handler)
                 #use these two images, one at the top left and one at the bottom right (the seasonal button), to estimate the size of the screen
                 upper_left_crown = location_handler.get_location("upper_left_crown.png")
                 seasonal_button = location_handler.get_location("seasonal_button.png")
@@ -61,6 +71,7 @@ class SeasonalBattler():
                     task = SELECT_1V1_BATTLE
             
             if(task == SELECT_1V1_BATTLE):
+                self.check_for_x_button(location_handler)
                 #battle_1v1_button = location_handler.get_location("battle_1v1_button.png",screen)
                 battle_1v1_button = location_handler.get_location("battle_1v1_button.png",confidence = 0.98,grayscale = False)
                 if(battle_1v1_button != None):
