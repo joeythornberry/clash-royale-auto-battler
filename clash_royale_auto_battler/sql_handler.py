@@ -19,7 +19,8 @@ create_battles_table = """CREATE TABLE IF NOT EXISTS battles (
 create_errors_table = """CREATE TABLE IF NOT EXISTS errors (
     run_id INT NOT NULL,
     datetime TEXT NOT NULL,
-    error_type TEXT NOT NULL
+    error_type TEXT NOT NULL,
+    screenshot BLOB NOT NULL
 )"""
 
 def insert_run(cursor,datetime,minutes,exit_code):
@@ -30,6 +31,7 @@ def insert_battle(cursor,run_id,datetime,minutes,crowns,opponent_crowns,tokens_g
     cursor.execute("""INSERT INTO battles (run_id,datetime,minutes,crowns,opponent_crowns,tokens_gained)
     VALUES (?,?,?,?,?,?)""", (run_id,datetime,minutes,crowns,opponent_crowns,tokens_gained))
 
-def insert_error(cursor,run_id,datetime,error_type):
-    cursor.execute("""INSERT INTO errors (run_id,datetime,error_type)
-    VALUES (?,?,?)""", (run_id,datetime,error_type))
+def insert_error(cursor,run_id,datetime,error_type,screenshot):
+    cursor.execute("""INSERT INTO errors (run_id,datetime,error_type,screenshot)
+    VALUES (?,?,?,?)""", (run_id,datetime,error_type,screenshot))
+

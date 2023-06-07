@@ -17,7 +17,7 @@ TOLERATED_TOTAL_RUN_TIME = 1800
 STARTUP_PHASE = "STARTUP_PHASE"
 BATTLE_PHASE = "BATTLE_PHASE"
 
-MAX_TOKENS = 10
+MAX_TOKENS = 1000
 
 class SeasonalBattler():
     def __init__(self):
@@ -45,12 +45,15 @@ class SeasonalBattler():
             time_since_last_successful_action = current_time - time_of_last_successful_action
             if phase == STARTUP_PHASE and time_since_last_successful_action >= TOLERATED_STARTUP_TIME:
                 print("startup took too long")
+                report_handler.log_error(exit_codes.RELOADABLE_ERROR)
                 return exit_codes.RELOADABLE_ERROR
             elif phase == BATTLE_PHASE and time_since_last_successful_action >= TOLERATED_TIME_BETWEEN_BATTLES:
                 print("starting next battle took too long")
+                report_handler.log_error(exit_codes.RELOADABLE_ERROR)
                 return exit_codes.RELOADABLE_ERROR
             if current_time - start_time >= TOLERATED_TOTAL_RUN_TIME:
                 print("run took too long")
+                report_handler.log_error(exit_codes.RELOADABLE_ERROR)
                 return exit_codes.RELOADABLE_ERROR
 
             if(task == CALIBRATE_AND_GET_TO_SEASONAL_SCREEN):

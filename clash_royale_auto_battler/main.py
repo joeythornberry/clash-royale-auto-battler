@@ -37,7 +37,7 @@ while True:
     if fight_seasonal_battles_result == exit_codes.SUCCESS:
         print("success")
         exit_code = exit_codes.SUCCESS
-        #emulator_handler.close_emulator()
+        emulator_handler.close_emulator()
         break
     elif fight_seasonal_battles_result == exit_codes.FATAL_ERROR:
         print("fatal error")
@@ -54,5 +54,4 @@ while True:
 end_time_seconds = time.time()
 total_runtime_seconds = end_time_seconds - start_time_seconds
 report_handler.complete_report(total_runtime_seconds,exit_code)
-report_handler.deliver_report()
 report_handler.save_report_as_sql()

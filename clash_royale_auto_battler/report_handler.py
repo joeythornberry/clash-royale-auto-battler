@@ -4,6 +4,8 @@ import sqlite3
 from sqlite3 import Error
 import datetime
 import sql_handler
+import pyautogui
+import io
 
 SECONDS_IN_A_MINUTE = 60
 
@@ -29,9 +31,14 @@ class ReportHandler:
         })
 
     def log_error(self,error_type):
+        screenshot = pyautogui.screenshot()
+        screenshot_data = io.BytesIO()
+        screenshot.save(screenshot_data, format='JPEG')
+        screenshot_data = screenshot_data.getvalue()
         self.report["errors"].append({
-            "time" : time.asctime(),
-            "error_type" : error_type
+            "datetime" : datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+            "error_type" : error_type,
+            "screenshot" : screenshot_data
         })
 
     def complete_report(self,total_runtime_seconds,exit_code):
@@ -56,13 +63,10 @@ class ReportHandler:
             for battle in self.report["battles"]:
                 sql_handler.insert_battle(cursor,run_id,battle["datetime"],battle["minutes"],battle["crowns"],battle["opponent_crowns"],battle["tokens_gained"])
             for error in self.report["errors"]:
-                sql_handler.insert_error(cursor,run_id,error["datetime"],error["error_type"])
+                sql_handler.insert_error(cursor,run_id,error["datetime"],error["error_type"],error["screenshot"])
             connection.commit()
             connection.close()
         except Error as error:
             print(error)
             return exit_codes.UNOBSTRUCTIVE_ERROR
         
-rh = ReportHandler()
-rh.report = {'datetime': '2023/06/07 15:36:32', 'minutes': 3.5, 'exit_code': 'success', 'battles': [{'datetime': '2023/06/07 15:40:02', 'minutes': 3.0, 'crowns': 0, 'opponent_crowns': 1, 'tokens_gained': 156}], 'errors': []}
-rh.save_report_as_sql()
