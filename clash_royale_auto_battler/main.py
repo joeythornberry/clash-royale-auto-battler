@@ -23,6 +23,8 @@ report_handler = report_handler.ReportHandler()
 seasonal_battler = seasonal_battler.SeasonalBattler()
 
 
+start_time_seconds = time.time()
+
 while True:
     api_access,api_access_failure_information = api_accesser.verify_api_is_working()
     if api_access == exit_codes.FATAL_ERROR:
@@ -34,10 +36,12 @@ while True:
     fight_seasonal_battles_result = seasonal_battler.fight_seasonal_battles(location_handler,api_accesser,report_handler)
     if fight_seasonal_battles_result == exit_codes.SUCCESS:
         print("success")
+        exit_code = exit_codes.SUCCESS
         #emulator_handler.close_emulator()
         break
     elif fight_seasonal_battles_result == exit_codes.FATAL_ERROR:
         print("fatal error")
+        exit_code = exit_codes.FATAL_ERROR
         emulator_handler.close_emulator()
         break
     elif fight_seasonal_battles_result == exit_codes.RELOADABLE_ERROR:
@@ -47,5 +51,8 @@ while True:
         print("sleeping to make sure emulator has enough time to close")
         time.sleep(10)
 
-report_handler.complete_report()
+end_time_seconds = time.time()
+total_runtime_seconds = end_time_seconds - start_time_seconds
+report_handler.complete_report(total_runtime_seconds,exit_code)
 report_handler.deliver_report()
+report_handler.save_report_as_sql()
