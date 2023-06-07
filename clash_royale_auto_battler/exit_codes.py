@@ -1,3 +1,4 @@
-SUCCESS = 0
-RELOADABLE_ERROR = 1
-FATAL_ERROR = 2
+SUCCESS = "success"
+UNOBSTRUCTIVE_ERROR = "unobstructive_error"
+RELOADABLE_ERROR = "reloadable_error"
+FATAL_ERROR = "fatal_error"
