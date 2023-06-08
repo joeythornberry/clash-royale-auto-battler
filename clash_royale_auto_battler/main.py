@@ -30,6 +30,7 @@ while True:
     if api_access == exit_codes.FATAL_ERROR:
         print("FATAL ERROR: failure to access API")
         print("error information: "+str(api_access_failure_information))
+        report_handler.log_error(exit_codes.FATAL_ERROR)
         break
     
     emulator_handler.open_emulator(location_handler)
