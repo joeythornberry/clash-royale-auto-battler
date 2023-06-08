@@ -19,6 +19,8 @@ BATTLE_PHASE = "BATTLE_PHASE"
 
 MAX_TOKENS = 1000
 
+BATTLE_ITERATIONS_BETWEEN_API_CHECKS = 5
+
 class SeasonalBattler():
     def __init__(self):
         self.total_tokens_gained = 0
@@ -118,7 +120,7 @@ class SeasonalBattler():
                             return exit_codes.FATAL_ERROR
                         #we'll use this to find how long the battle took
                         start_of_current_battle_time = current_time
-                        battle_iterations = 0
+                        battle_iterations_until_api_check = BATTLE_ITERATIONS_BETWEEN_API_CHECKS
                         task = BATTLE
 
                 case "BATTLE":    
@@ -126,9 +128,9 @@ class SeasonalBattler():
                     for slot in card_slots:
                         pyautogui.moveTo(slot[0],slot[1])
                         pyautogui.dragTo(target_pointX,target_pointY,0.5)
-                    battle_iterations += 1
-                    #only do this every 5 cycles because it takes a while
-                    if battle_iterations % 5 == 0:
+                    battle_iterations_until_api_check -= 1
+                    #only do this every few cycles because it takes a while
+                    if battle_iterations_until_api_check <= 0:
                         #detect if the battle has ended by checking if the time of the last battle is different
                         new_last_battle_time = api_accesser.last_battle_time()
                         if new_last_battle_time == exit_codes.FATAL_ERROR:
@@ -145,6 +147,7 @@ class SeasonalBattler():
                             else:
                                 print("goal not yet reached")
                             time_of_last_successful_action = current_time
+                            battle_iterations_until_api_check = BATTLE_ITERATIONS_BETWEEN_API_CHECKS
                             task = END_BATTLE
                         
                 case "END_BATTLE":
