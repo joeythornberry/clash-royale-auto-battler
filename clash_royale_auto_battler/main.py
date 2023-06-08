@@ -42,23 +42,24 @@ while True:
         break
     
     fight_seasonal_battles_result = seasonal_battler.fight_seasonal_battles(location_handler,api_accesser,report_handler)
-    if fight_seasonal_battles_result == exit_codes.SUCCESS:
-        print("success")
-        exit_code = exit_codes.SUCCESS
-        emulator_handler.close_emulator()
-        break
-    elif fight_seasonal_battles_result == exit_codes.FATAL_ERROR:
-        print("fatal error")
-        exit_code = exit_codes.FATAL_ERROR
-        report_handler.log_error(exit_codes.FATAL_ERROR)
-        emulator_handler.close_emulator()
-        break
-    elif fight_seasonal_battles_result == exit_codes.RELOADABLE_ERROR:
-        location_handler.reset()
-        report_handler.log_error(exit_codes.RELOADABLE_ERROR)
-        emulator_handler.close_emulator()
-        print("sleeping to make sure emulator has enough time to close")
-        time.sleep(10)
+    match fight_seasonal_battles_result:
+        case exit_codes.SUCCESS:
+            print("success")
+            exit_code = exit_codes.SUCCESS
+            emulator_handler.close_emulator()
+            break
+        case exit_codes.FATAL_ERROR:
+            print("fatal error")
+            exit_code = exit_codes.FATAL_ERROR
+            report_handler.log_error(exit_codes.FATAL_ERROR)
+            emulator_handler.close_emulator()
+            break
+        case exit_codes.RELOADABLE_ERROR:
+            location_handler.reset()
+            report_handler.log_error(exit_codes.RELOADABLE_ERROR)
+            emulator_handler.close_emulator()
+            print("sleeping to make sure emulator has enough time to close")
+            time.sleep(10)
 
 end_time_seconds = time.time()
 total_runtime_seconds = end_time_seconds - start_time_seconds
