@@ -6,7 +6,8 @@ create_runs_table = """CREATE TABLE IF NOT EXISTS runs (
     id INTEGER PRIMARY KEY, 
     datetime TEXT NOT NULL,
     minutes FLOAT NOT NULL,
-    exit_code TEXT NOT NULL
+    exit_code TEXT NOT NULL,
+    error_count INT NOT NULL
 )"""
 create_battles_table = """CREATE TABLE IF NOT EXISTS battles (
     run_id INT NOT NULL, 
@@ -23,9 +24,9 @@ create_errors_table = """CREATE TABLE IF NOT EXISTS errors (
     screenshot BLOB NOT NULL
 )"""
 
-def insert_run(cursor,datetime,minutes,exit_code):
-    cursor.execute("""INSERT INTO runs(datetime,minutes,exit_code)
-    VALUES (?,?,?)""", (datetime,minutes,exit_code))
+def insert_run(cursor,datetime,minutes,exit_code,error_count):
+    cursor.execute("""INSERT INTO runs(datetime,minutes,exit_code,error_count)
+    VALUES (?,?,?,?)""", (datetime,minutes,exit_code,error_count))
 
 def insert_battle(cursor,run_id,datetime,minutes,crowns,opponent_crowns,tokens_gained):
     cursor.execute("""INSERT INTO battles (run_id,datetime,minutes,crowns,opponent_crowns,tokens_gained)

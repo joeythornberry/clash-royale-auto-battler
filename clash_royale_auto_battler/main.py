@@ -65,3 +65,5 @@ end_time_seconds = time.time()
 total_runtime_seconds = end_time_seconds - start_time_seconds
 report_handler.complete_report(total_runtime_seconds,exit_code)
 report_handler.save_report_as_sql()
+time.sleep(3)
+print("done")
