@@ -2,6 +2,9 @@ import pyautogui
 import win32con
 import win32gui
 import time
+import exit_codes
+
+PERMITTED_TIME_TO_OPEN_CLASH_ROYALE = 60
 
 class EmulatorHandler:
 
@@ -11,8 +14,13 @@ class EmulatorHandler:
 
     def open_emulator(self,location_handler):
         print("opening emulator")
+        start_time = time.time()
         open_emulator_task = self.OPEN_NOX
         while True:
+
+            if time.time() - start_time > PERMITTED_TIME_TO_OPEN_CLASH_ROYALE:
+                return exit_codes.FATAL_ERROR
+
             if(open_emulator_task == self.OPEN_NOX):
                 nox_assistant_button = location_handler.get_location("nox_assistant.png")
                 if(nox_assistant_button != None):
@@ -27,7 +35,7 @@ class EmulatorHandler:
                 if(clash_royale_button != None):
                     pyautogui.click(clash_royale_button)
                     print("clash royale opened")
-                    break
+                    return exit_codes.SUCCESS
 
     #https://stackoverflow.com/questions/59868194/rename-a-window/66141368#66141368
     def __windows_to_close(self,handle, more):
