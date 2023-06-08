@@ -1,6 +1,7 @@
 import pyautogui
 import time
 import exit_codes
+import random
 
 
 CALIBRATE_AND_GET_TO_SEASONAL_SCREEN = "CALIBRATE_AND_GET_TO_SEASONAL_SCREEN"
@@ -20,6 +21,11 @@ BATTLE_PHASE = "BATTLE_PHASE"
 MAX_TOKENS = 1000
 
 BATTLE_ITERATIONS_BETWEEN_API_CHECKS = 5
+
+def get_battle_iterations_until_emote():
+    MIN_ITERATIONS_BETWEEN_EMOTES = 5
+    MAX_ITERATIONS_BETWEEN_EMOTES = 7
+    return random.randint(MIN_ITERATIONS_BETWEEN_EMOTES,MAX_ITERATIONS_BETWEEN_EMOTES)
 
 class SeasonalBattler():
     def __init__(self):
@@ -121,6 +127,7 @@ class SeasonalBattler():
                         #we'll use this to find how long the battle took
                         start_of_current_battle_time = current_time
                         battle_iterations_until_api_check = BATTLE_ITERATIONS_BETWEEN_API_CHECKS
+                        battle_iterations_until_emote = get_battle_iterations_until_emote()
                         task = BATTLE
 
                 case "BATTLE":    
@@ -128,6 +135,7 @@ class SeasonalBattler():
                     for slot in card_slots:
                         pyautogui.moveTo(slot[0],slot[1])
                         pyautogui.dragTo(target_pointX,target_pointY,0.5)
+                    
                     battle_iterations_until_api_check -= 1
                     #only do this every few cycles because it takes a while
                     if battle_iterations_until_api_check <= 0:
@@ -149,6 +157,32 @@ class SeasonalBattler():
                             time_of_last_successful_action = current_time
                             battle_iterations_until_api_check = BATTLE_ITERATIONS_BETWEEN_API_CHECKS
                             task = END_BATTLE
+
+                    battle_iterations_until_emote -= 1
+                    if battle_iterations_until_emote == 0:
+                        print("attempting emote")
+                        emote_button = location_handler.get_location("emote_button.png")
+                        if emote_button != None:
+                            pyautogui.click(emote_button)
+                            print("sleeping to give emote time to show up")
+                            time.sleep(0.25)
+                            crying_emote = location_handler.get_location("crying_emote.png")
+                            if crying_emote != None:
+                                print('emoting')
+                                pyautogui.click(crying_emote)
+                                print("resetting emote timer")
+                                battle_iterations_until_emote = get_battle_iterations_until_emote()
+                            else:
+                                print("opened emotes but failed to find target emote")
+                                print("clicking target point to close emotes")
+                                pyautogui.click(target_pointX,target_pointY)
+                                print("we will not attempt to emote during the rest of this battle")
+                                battle_iterations_until_emote = -1
+                        else:
+                            print("failed to open emotes")
+                            print("we will not attempt to emote during the rest of this battle")
+                            battle_iterations_until_emote = -1
+                    
                         
                 case "END_BATTLE":
                     end_of_battle_ok = location_handler.get_location("end_of_battle_ok.png")
