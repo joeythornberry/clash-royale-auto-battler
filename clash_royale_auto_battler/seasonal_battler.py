@@ -59,6 +59,7 @@ class SeasonalBattler():
             if(task == CALIBRATE_AND_GET_TO_SEASONAL_SCREEN):
                 print("sleeping so we don't make more locate calls than we need to")
                 time.sleep(5)
+                #just in case a popup gets in the way
                 self.check_for_x_button(location_handler)
                 #use these two images, one at the top left and one at the bottom right (the seasonal button), to estimate the size of the screen
                 upper_left_crown = location_handler.get_location("upper_left_crown.png")
@@ -68,7 +69,6 @@ class SeasonalBattler():
                     screen_height = seasonal_button.y-upper_left_crown.y
                     screen = (upper_left_crown.x,upper_left_crown.y,screen_width,screen_height)
                     print("screen size (very roughly) calculated: "+str(screen))
-                    #click on the seasonal button
                     pyautogui.click(seasonal_button)
                     print("opened seasonal screen")
                     task = SELECT_1V1_BATTLE
@@ -97,16 +97,13 @@ class SeasonalBattler():
             if(task == CALIBRATE_BATTLE):
                 print("sleeping so we don't make more locate calls than we need to")
                 time.sleep(2)
-                #enemy_tower_healthbar = location_handler.get_location("enemy_tower_healthbar.png",region=screen,confidence=0.8)
                 enemy_tower_healthbar = location_handler.get_location("enemy_tower_healthbar.png",confidence=0.8)
                 if(enemy_tower_healthbar != None):
-                    #wait for cards to show up (they don't until a little after enemy tower is visible)
                     print("sleeping to wait for cards to show up on screen")
                     time.sleep(1.5)
                     #calculate a target point just in front of the left tower, so that spells will hit it
                     target_pointX = enemy_tower_healthbar.x
-                    #target_pointY = enemy_tower_healthbar.y + screen_height/8
-                    target_pointY = enemy_tower_healthbar.y + 900/10
+                    target_pointY = enemy_tower_healthbar.y + screen_height/10
 
                     #the reference images we have of each different elixir cost
                     card_elixir_icons = ["two_elixir_card_icon.png","three_elixir_card_icon.png","four_elixir_card_icon.png"]
@@ -137,9 +134,8 @@ class SeasonalBattler():
                         return exit_codes.FATAL_ERROR
                     if(old_last_battle_time != new_last_battle_time):
                         print("time of last battle has changed, meaning the current battle has ended")
-
-                        print("adding tokens gained to total token count")
                         length_of_battle_seconds = round(current_time - start_of_current_battle_time)
+                        print("reporting battle and adding tokens gained to total token count")
                         self.total_tokens_gained += api_accesser.report_battle_and_return_tokens_gained(length_of_battle_seconds,report_handler)
                         print(str(self.total_tokens_gained)+" out of "+str(MAX_TOKENS)+" tokens gained")
                         if(self.total_tokens_gained >= MAX_TOKENS):
@@ -151,7 +147,6 @@ class SeasonalBattler():
                         task = END_BATTLE
                     
             if(task == END_BATTLE):
-                #end_of_battle_ok = location_handler.get_location("end_of_battle_ok.png",region=screen)
                 end_of_battle_ok = location_handler.get_location("end_of_battle_ok.png")
                 if(end_of_battle_ok != None):
                     pyautogui.click(end_of_battle_ok)

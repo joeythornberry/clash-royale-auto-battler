@@ -43,6 +43,7 @@ while True:
         print("fatal error")
         exit_code = exit_codes.FATAL_ERROR
         emulator_handler.close_emulator()
+        report_handler.log_error(exit_codes.FATAL_ERROR)
         break
     elif fight_seasonal_battles_result == exit_codes.RELOADABLE_ERROR:
         location_handler.reset()
